@@ -68,4 +68,15 @@ app.get('/film/group/category', (req, res) => {
     })
 })
 
+
+app.put('/actors/:id', (req, res) => {
+  const id = req.params.id
+  db.query(`UPDATE actor SET ? 
+            WHERE actor_id = ?`,
+            [req.body, id], (error) => {
+              if (error) throw error;
+              res.status(200).send(`Actor with ${id} update successfully.`)
+            })
+})
+
 app.listen(3000)
