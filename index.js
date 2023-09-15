@@ -3,6 +3,8 @@ const app = express()
 
 const db = require("./config");
 
+app.use(express.json())
+
 app.get('/categories', (req, res) => {
   db.query('SELECT * FROM category', (error, result) => {
     if (error) throw error
@@ -68,7 +70,7 @@ app.get('/film/group/category', (req, res) => {
     })
 })
 
-
+//Изменение данных
 app.put('/actors/:id', (req, res) => {
   const id = req.params.id
   db.query(`UPDATE actor SET ? 
@@ -78,5 +80,26 @@ app.put('/actors/:id', (req, res) => {
               res.status(200).send(`Actor with ${id} update successfully.`)
             })
 })
+
+//Добавление данных
+app.post('/actors', (req, res) => {
+  db.query(`INSERT INTO actor 
+            Set ?`, req.body, (error, result) => {
+    if (error) throw error;
+    res.status(201).send(`Actor added with ID: ${result.insertId}`)
+  })
+})
+
+
+//Удаление данных
+app.delete('/actors/:id', (req, res) => {
+  const id = req.params.id
+  db.query(`DELETE FROM actor WHERE actor_id = ?`, id, (error) => {
+    if(error) throw error;
+    res.status(200).send(`Actor with ${id} deleted.`)
+  })
+})
+
+
 
 app.listen(3000)
